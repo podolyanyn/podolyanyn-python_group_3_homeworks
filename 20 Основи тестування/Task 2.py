@@ -3,6 +3,7 @@ import json
 import os
 import tempfile
 
+
 def add_contact(pb, phone, first_name, last_name, city, state):
     """Додає новий контакт у телефонну книгу."""
     if not phone:
@@ -74,7 +75,6 @@ def load_data(filename):
     return {}
 
 
-
 class TestPhonebook(unittest.TestCase):
     def setUp(self):
         self.pb = {
@@ -119,6 +119,6 @@ class TestPhonebook(unittest.TestCase):
         finally:
             os.remove(filename)
 
-# ---------------- Запуск тестів ----------------
+
 if __name__ == "__main__":
     unittest.main()
