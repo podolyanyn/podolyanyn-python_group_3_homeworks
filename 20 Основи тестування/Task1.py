@@ -1,34 +1,45 @@
-import unittest
-import math
+import os
+from datetime import datetime
 
-def safe_log(x, base=math.e):
-    """Обчислює логарифм числа x за основою base.
-    Повертає None, якщо x <= 0 або base <= 0 або base == 1.
-    """
-    if x <= 0 or base <= 0 or base == 1:
-        return None
-    return math.log(x, base)
+class SmartFile:
+    opened_files_count = 0
+    log_dir = "logs"
 
-class TestLogFunction(unittest.TestCase):
+    def __init__(self, filename, mode="r", encoding="utf-8"):
+        self.filename = filename
+        self.mode = mode
+        self.encoding = encoding
+        self.file = None
+        self.start_time = None
+        os.makedirs(self.log_dir, exist_ok=True)
 
-    def test_positive_numbers(self):
-        self.assertAlmostEqual(safe_log(1), 0)
-        self.assertAlmostEqual(safe_log(math.e), 1)
-        self.assertAlmostEqual(safe_log(8, 2), 3)
+    def __enter__(self):
+        SmartFile.opened_files_count += 1
+        self.start_time = datetime.now()
+        self.file = open(self.filename, self.mode, encoding=self.encoding)
+        self._log_event("OPENED")
+        return self.file
 
-    def test_invalid_x(self):
-        self.assertIsNone(safe_log(0))
-        self.assertIsNone(safe_log(-5))
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if self.file and not self.file.closed:
+            self.file.close()
 
-    def test_invalid_base(self):
-        self.assertIsNone(safe_log(10, 0))
-        self.assertIsNone(safe_log(10, 1))
-        self.assertIsNone(safe_log(10, -2))
+        self._log_event("CLOSED")
 
-    def test_custom_base(self):
-        self.assertAlmostEqual(safe_log(27, 3), 3)
-        self.assertAlmostEqual(safe_log(16, 2), 4)
+        if exc_type:
+            self._log_event(f"ERROR: {exc_type.__name__} - {exc_val}")
+            return False  # False = помилка підніметься далі
 
+    def _log_event(self, event):
+        log_path = os.path.join(self.log_dir, "file_log.txt")
+        with open(log_path, "a", encoding="utf-8") as log_file:
+            log_file.write(
+                f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] "
+                f"{event} | File: {self.filename} | Mode: {self.mode} "
+                f"| Total opened: {SmartFile.opened_files_count}\n"
+            )
+with SmartFile("test.txt", "w") as f:
+    f.write("Привіт, світ!\n")
 
-if __name__ == "__main__":
-    unittest.main()
+with SmartFile("test.txt", "r") as f:
+    print(f.read())
