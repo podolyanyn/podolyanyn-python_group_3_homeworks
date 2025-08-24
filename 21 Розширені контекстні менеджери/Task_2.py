@@ -1,70 +1,138 @@
-class Node:
-    def __init__(self, data, next=None):
-        self.data = data
-        self.next = next
+from datetime import datetime
+import os
+import io
+import shutil
+import tempfile
+import unittest
 
-    def __repr__(self):
-        return f"Node({self.data})"
+class FileManager:
+    open_count = 0
+
+    def __init__(self, path, mode="r", encoding=None, log_path="file_manager.log"):
+        self.path = path
+        self.mode = mode
+        self.encoding = encoding
+        self.log_path = log_path
+        self.file = None
+        self._entered = False
+
+    def _log(self, message: str) -> None:
+        ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        with open(self.log_path, "a", encoding="utf-8") as lf:
+            lf.write(f"{ts} | {message}\n")
+
+    def __enter__(self):
+        try:
+            if "b" in self.mode:
+                self.file = open(self.path, self.mode)
+            else:
+                self.file = open(self.path, self.mode, encoding=self.encoding)
+            FileManager.open_count += 1
+            self._entered = True
+            self._log(f"OPEN  path='{self.path}' mode='{self.mode}' open_count={FileManager.open_count}")
+            return self.file
+        except Exception as e:
+            self._log(f"ERROR path='{self.path}' type={type(e).__name__} msg={e} open_count={FileManager.open_count}")
+            raise
+
+    def __exit__(self, exc_type, exc, tb):
+        try:
+            if exc_type is not None:
+                self._log(f"ERROR path='{self.path}' type={exc_type.__name__} msg={exc} open_count={FileManager.open_count}")
+
+            if self.file and not self.file.closed:
+                try:
+                    self.file.flush()
+                finally:
+                    self.file.close()
+        finally:
+            if self._entered:
+                FileManager.open_count = max(0, FileManager.open_count - 1)
+            self._log(f"CLOSE path='{self.path}' mode='{self.mode}' open_count={FileManager.open_count}")
+            self.file = None
+            self._entered = False
+
+        return False
 
 
-class Queue:
-    def __init__(self):
-        self._head = None
-        self._tail = None
-        self._size = 0
+class TestFileManager(unittest.TestCase):
+    def setUp(self):
+        self.tmpdir = tempfile.mkdtemp(prefix="fm_tests_")
+        self.log_path = os.path.join(self.tmpdir, "file_manager.log")
+        self.txt_path = os.path.join(self.tmpdir, "demo.txt")
+        FileManager.open_count = 0
 
-    def enqueue(self, item):
-        node = Node(item)
-        if self._tail is None:
-            self._head = self._tail = node
-        else:
-            self._tail.next = node
-            self._tail = node
-        self._size += 1
+    def tearDown(self):
+        shutil.rmtree(self.tmpdir, ignore_errors=True)
 
-    def dequeue(self):
-        if self._head is None:
-            raise IndexError("dequeue from empty queue")
-        node = self._head
-        self._head = node.next
-        if self._head is None:
-            self._tail = None
-        self._size -= 1
-        return node.data
+    def read_log(self):
+        if not os.path.exists(self.log_path):
+            return ""
+        with io.open(self.log_path, "r", encoding="utf-8") as f:
+            return f.read()
 
-    def peek(self):
-        if self._head is None:
-            raise IndexError("peek from empty queue")
-        return self._head.data
+    def test_write_and_read_text(self):
+        data = "Привіт, світ!\n"
+        with FileManager(self.txt_path, "w", encoding="utf-8", log_path=self.log_path) as f:
+            f.write(data)
+            self.assertEqual(FileManager.open_count, 1)  # під час with
+        self.assertEqual(FileManager.open_count, 0)      # після with
+        with FileManager(self.txt_path, "r", encoding="utf-8", log_path=self.log_path) as f:
+            content = f.read()
+            self.assertEqual(content, data)
 
-    def is_empty(self):
-        return self._head is None
+        log = self.read_log()
+        self.assertIn("OPEN", log)
+        self.assertIn("CLOSE", log)
+        self.assertNotIn("ERROR", log)
 
-    def clear(self):
-        cur = self._head
-        while cur:
-            nxt = cur.next
-            cur.next = None
-            cur = nxt
-        self._head = self._tail = None
-        self._size = 0
+    def test_nested_contexts_and_open_count(self):
+        with FileManager(self.txt_path, "w", encoding="utf-8", log_path=self.log_path) as f1:
+            f1.write("A")
+            self.assertEqual(FileManager.open_count, 1)
+            with FileManager(self.txt_path, "r", encoding="utf-8", log_path=self.log_path) as f2:
+                self.assertEqual(f2.read(), "A")
+                self.assertEqual(FileManager.open_count, 2)
+            self.assertEqual(FileManager.open_count, 1)
+        self.assertEqual(FileManager.open_count, 0)
 
-    def __len__(self):
-        return self._size
+    def test_log_contains_path_and_mode(self):
+        with FileManager(self.txt_path, "w", encoding="utf-8", log_path=self.log_path) as f:
+            f.write("log me")
+        log = self.read_log()
+        self.assertIn(self.txt_path, log)
+        self.assertIn("mode='w'", log)
 
-    def __iter__(self):
-        cur = self._head
-        while cur:
-            yield cur.data
-            cur = cur.next
+    def test_file_is_closed_after_context(self):
+        with FileManager(self.txt_path, "w", encoding="utf-8", log_path=self.log_path) as f:
+            f.write("X")
+            self.assertFalse(f.closed)
+        self.assertTrue(f.closed)
+        self.assertEqual(FileManager.open_count, 0)
 
-    def __repr__(self):
-        items = ", ".join(repr(x) for x in self)
-        return f"Queue[front: {items} :rear]"
+    def test_read_missing_file_raises_and_logged(self):
+        with self.assertRaises(FileNotFoundError):
+            with FileManager(os.path.join(self.tmpdir, "no_such.txt"),
+                             "r", encoding="utf-8", log_path=self.log_path) as f:
+                _ = f.read()
+        self.assertEqual(FileManager.open_count, 0)
+        self.assertIn("ERROR", self.read_log())
 
-q = Queue()
-q.enqueue("A"); q.enqueue("B"); q.enqueue("C")
-print(q.peek())
-print(q.dequeue())
-print(len(q))
-print(q)
+    def test_exception_inside_with_not_suppressed(self):
+        class Boom(Exception):
+            pass
+
+        with self.assertRaises(Boom):
+            with FileManager(self.txt_path, "w", encoding="utf-8", log_path=self.log_path) as f:
+                f.write("some")
+                raise Boom("boom")
+
+        self.assertEqual(FileManager.open_count, 0)
+        log = self.read_log()
+        self.assertIn("OPEN", log)
+        self.assertIn("ERROR", log)
+        self.assertIn("CLOSE", log)
+
+
+if __name__ == "__main__":
+    unittest.main(verbosity=2)
