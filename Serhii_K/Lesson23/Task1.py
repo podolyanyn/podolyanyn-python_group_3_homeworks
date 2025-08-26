@@ -9,7 +9,6 @@
 # 5 - 1
 # 6 - n
 
-
 from typing import List, Tuple
 
 # answer 3 - n
