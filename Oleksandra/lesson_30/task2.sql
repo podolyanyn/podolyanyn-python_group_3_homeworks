@@ -20,5 +20,5 @@ SELECT MAX(salary) AS maximum_salary, MIN(salary) AS minimum_salary
 FROM employees;
 
 -- 6. Запит для отримання щомісячної зарплати (округленої до 2 знаків після коми) для кожного працівника.
-SELECT first_name, last_name, ROUND(salary / 12, 2) AS monthly_salary
+SELECT first_name, last_name, ROUND(CAST(salary / 12.0 AS REAL), 2) AS monthly_salary
 FROM employees;
