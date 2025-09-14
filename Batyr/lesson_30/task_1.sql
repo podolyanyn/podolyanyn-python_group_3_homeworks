@@ -1,0 +1,30 @@
+-- CREATE TABLE hw_1_table (
+--     id INTEGER PRIMARY KEY AUTOINCREMENT,
+--     article VARCHAR(10),
+--     english VARCHAR(100),
+--     ukrainian VARCHAR(100),
+--     transcription VARCHAR(100),
+--     category VARCHAR(50),
+--     subcategory VARCHAR(50)
+-- );
+--
+-- ALTER TABLE hw_1_table
+--     RENAME TO home_work_30_1_table;
+--
+-- ALTER TABLE home_work_30_1_table
+--     ADD COLUMN commentary VARCHAR(100);
+--
+-- INSERT INTO home_work_30_1_table (article, english, ukrainian, transcription, category, subcategory, commentary)
+--     VALUES ('an', 'apple', 'яблуко','епл', 'food','fruits', NULL);
+--
+-- INSERT INTO home_work_30_1_table (article, english, ukrainian, transcription, category, subcategory, commentary)
+--     VALUES ('a', 'tiger', 'тигр','тайгер', 'animals','predators', NULL);
+--
+-- UPDATE home_work_30_1_table
+--     SET commentary='is orange or white depending on region, with black lines'
+--     WHERE english='tiger';
+--
+-- DELETE FROM home_work_30_1_table
+--     WHERE english='tiger';
+--
+-- DELETE FROM home_work_30_1_table;
