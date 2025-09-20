@@ -4,9 +4,8 @@ from Task2_Caesar import Caesar_cipher
 if __name__ == "__main__":
     while True:
         # Запитуємо у користувача ключ та текст повідомлення,
-        # де перший символ- це знак ключа (+ або -),
-        # другий символ - це кількість шагів сдвигу,
-        # і дали після тіре - текст повідомлення
+        # де перші символм- це знак ключа (кількість шагів сдвигу),
+        # і дали після крапки - текст повідомлення
         user_answer = input("""Введіть ключ-повідомлення:
         перші символи- це кількість шагів сдвигу (наприклад, -2 або 7),
         і дали після крапки - текст повідомлення
@@ -16,10 +15,11 @@ if __name__ == "__main__":
         HOST = '127.0.0.1'
         PORT = 65432
 
-        with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.connect((HOST, PORT))
             # Відправка даних до сервера:
             if user_answer == 'q':
-                s.sendto('stop_server'.encode('utf-8'), (HOST, PORT))
+                s.sendall('stop_server'.encode('utf-8'))
                 print("Закриття клієнта та сервера...")
                 quit()
             else:
@@ -36,7 +36,7 @@ if __name__ == "__main__":
 
                 # Відправка повідомлення на сервер:
                 message = user_answer.encode("utf-8")
-                s.sendto(message, (HOST, PORT))
+                s.sendall(message)
 
             # Отримання повідомлення від сервера:
             data = s.recv(1024).decode('UTF-8')
