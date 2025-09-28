@@ -1,70 +1,21 @@
-class Node:
-    def __init__(self, data, next=None):
-        self.data = data
-        self.next = next
+def b_search_recursive(arr, target, left=0, right=None):
 
-    def __repr__(self):
-        return f"Node({self.data})"
+    if right is None:
+        right = len(arr) - 1
 
+    if left > right:
+        return -1
 
-class Queue:
-    def __init__(self):
-        self._head = None
-        self._tail = None
-        self._size = 0
+    mid = left + (right - left) // 2
 
-    def enqueue(self, item):
-        node = Node(item)
-        if self._tail is None:
-            self._head = self._tail = node
-        else:
-            self._tail.next = node
-            self._tail = node
-        self._size += 1
+    if arr[mid] == target:
+        return mid
+    elif arr[mid] > target:
+        return b_search_recursive(arr, target, left, mid - 1)
+    else:
+        return b_search_recursive(arr, target, mid + 1, right)
 
-    def dequeue(self):
-        if self._head is None:
-            raise IndexError("dequeue from empty queue")
-        node = self._head
-        self._head = node.next
-        if self._head is None:
-            self._tail = None
-        self._size -= 1
-        return node.data
+arr = [1, 3, 5, 7, 9, 11]
 
-    def peek(self):
-        if self._head is None:
-            raise IndexError("peek from empty queue")
-        return self._head.data
-
-    def is_empty(self):
-        return self._head is None
-
-    def clear(self):
-        cur = self._head
-        while cur:
-            nxt = cur.next
-            cur.next = None
-            cur = nxt
-        self._head = self._tail = None
-        self._size = 0
-
-    def __len__(self):
-        return self._size
-
-    def __iter__(self):
-        cur = self._head
-        while cur:
-            yield cur.data
-            cur = cur.next
-
-    def __repr__(self):
-        items = ", ".join(repr(x) for x in self)
-        return f"Queue[front: {items} :rear]"
-
-q = Queue()
-q.enqueue("A"); q.enqueue("B"); q.enqueue("C")
-print(q.peek())
-print(q.dequeue())
-print(len(q))
-print(q)
+print(b_search_recursive(arr, 7))
+print(b_search_recursive(arr, 8))
