@@ -7,19 +7,22 @@
 import requests
 from datetime import date
 import json
-import threading
+import os
 import time
 import multiprocessing
+from concurrent.futures import ThreadPoolExecutor
 
 
-def NBU_request(start_date: date, end_date: date, val, list_data: list):
+def NBU_request(val):
     """Функція, що надсилає запит на сайт НБУ, отримує курс валют за певний період часу -
      в нашому випадку поточної доби і зберігає ці дані в форматі json в переданий список list_data,
      також зберігаємо дані в json-файл (це також I/O-bound операція)
      (в запиті також вказується порядок сортування (зростання) за кодом валюти r030)"""
 
+    start_date = date.today().strftime("%Y%m%d")
+
     url = f"https://bank.gov.ua//NBUStatService/v1/statdirectory/exchange?valcode={val}&date={start_date}&json"
-    file_name = 'Exchang.json'
+    file_name = 'Exchang_multiprocessing.json'
 
     # Відправляємо запит на сервер:
     response = requests.get(url)
@@ -27,12 +30,14 @@ def NBU_request(start_date: date, end_date: date, val, list_data: list):
     # Якщо дані отримано успішно - повертаємо дані у форматі json, а також зберігаємо їх в файл:
     if response.status_code == 200:
         json_response = response.json()
-        list_data.append(json_response)
 
         # Збереження в файл
         save_in_json_file(file_name, json_response)
+        return json_response
     else:
         print(f"Помилка {response.status_code} при отриманні даних з сайту")
+
+
 
 
 def save_in_json_file(file_name: str, new_data):
@@ -58,54 +63,60 @@ def save_in_json_file(file_name: str, new_data):
 
 if __name__ == '__main__':
     # Потрібен список валют, по яких потрібно зробити запити:
-    list_val = ['usd', 'eur', 'gbr']
+    list_val = ['usd', 'eur', 'gbp']
 
-    # дати:
-    today = date.today().strftime("%Y%m%d")
-    pre_date = date.today().strftime("%Y%m%d")
-
-
-    # Для багатопотокового запиту потрібно створити
-    # список для збереження результатів запитів,
-    # та список thread для роботи з потоками:
-    list_data = []
-    list_threads = []
+    # Попереднє видалення файлу:
+    if os.path.exists('Exchang_multiprocessing.json'):
+        os.remove('Exchang_multiprocessing.json')
 
     # Варіант 1 - без створення потоків. Просто запити в циклі
-    start_time2 = time.perf_counter()
+    results = []
+
+    start_time = time.perf_counter()
+
     for val in list_val:
-        NBU_request(pre_date, today, val, list_data)
+        results.append(NBU_request(val))
 
-    duration2 = time.perf_counter() - start_time2
+    duration2 = time.perf_counter() - start_time
 
-    print(f"Отримання і збереження даних (без використання потоків) за {duration2} сек.")   # 2.411334899981739 сек.
+    print(f"Отримання і збереження даних (без використання потоків) за {duration2} сек.")   # 2.7806955999694765 сек.
+
+
+    # Попереднє видалення файлу:
+    if os.path.exists('Exchang_multiprocessing.json'):
+        os.remove('Exchang_multiprocessing.json')
+
 
     # Варіант 2 - з потоками.
-    start_time1 = time.perf_counter()
-    # Для запиту на сайт під кожну пару дат в списку list_dates створюємо свій потік.
-    for val in list_val:
-        t = threading.Thread(target=NBU_request, args=(pre_date, today, val, list_data))
-        list_threads.append(t)
-        t.start()
+    results = []
+    list_threads = []
 
-    # Очікуємо на завершення роботи всіх потоків:
-    for t in list_threads:
-        t.join()
+    start_time2 = time.perf_counter()
 
-    duration1 = time.perf_counter() - start_time1
+    with ThreadPoolExecutor() as executor:
+        results = list(executor.map(NBU_request, list_val))
 
-    print(f"Отримання і збереження даних (з використанням потоків) за {duration1} сек.")    # 0.9391106000111904 сек.
+    duration1 = time.perf_counter() - start_time2
+
+    print(f"Отримання і збереження даних (з використанням потоків) за {duration1} сек.")    # 1.2195232999511063 сек.
+
+
+    # Попереднє видалення файлу:
+    if os.path.exists('Exchang_multiprocessing.json'):
+        os.remove('Exchang_multiprocessing.json')
 
 
     # 3 Варіант. Мультіпроцессінг
+    results = []
+
     start_time1 = time.perf_counter()
-    # Для запиту на сайт під кожну пару дат в списку list_dates створюємо свій потік.
+
     with multiprocessing.Pool() as pool:
-        pool.apply_async(NBU_request, args=(pre_date, today, list_val))
+        results = pool.map(NBU_request, list_val)
 
     duration1 = time.perf_counter() - start_time1
 
-    print(f"Отримання і збереження даних (з використанням процесів) за {duration1} сек.")   # 0.10446699999738485 сек.
+    print(f"Отримання і збереження даних (з використанням процесів) за {duration1} сек.")   # 1.8159647000138648 сек.
 
-    # Це - приклад I/O-bound задач, але і тут використання мультіпроцесінгу дало найбільшу продуктивність (0.1 сек),
-    # в порівнянні з використанням потоків (0.9 сек) і з використанням синхронних обчислень (2.4 сек).
+    # Це - приклад I/O-bound задач, і тут використання потоків дало найбільшу продуктивність (1.2 сек),
+    # в порівнянні з використанням мультипроцессінгу (1.8 сек) і з використанням синхронних обчислень (2.7 сек).
