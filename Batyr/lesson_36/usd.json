@@ -1,0 +1,50 @@
+[
+    {
+        "exchangedate": "04.10.2025",
+        "r030": 840,
+        "cc": "USD",
+        "txt": "Долар США",
+        "enname": "US Dollar",
+        "rate": 41.2764,
+        "units": 1,
+        "rate_per_unit": 41.2764,
+        "group": "1",
+        "calcdate": "02.10.2025"
+    },
+    {
+        "exchangedate": "05.10.2025",
+        "r030": 840,
+        "cc": "USD",
+        "txt": "Долар США",
+        "enname": "US Dollar",
+        "rate": 41.2764,
+        "units": 1,
+        "rate_per_unit": 41.2764,
+        "group": "1",
+        "calcdate": "02.10.2025"
+    },
+    {
+        "exchangedate": "06.10.2025",
+        "r030": 840,
+        "cc": "USD",
+        "txt": "Долар США",
+        "enname": "US Dollar",
+        "rate": 41.2286,
+        "units": 1,
+        "rate_per_unit": 41.2286,
+        "group": "1",
+        "calcdate": "03.10.2025"
+    },
+    {
+        "exchangedate": "07.10.2025",
+        "r030": 840,
+        "cc": "USD",
+        "txt": "Долар США",
+        "enname": "US Dollar",
+        "rate": 41.3409,
+        "units": 1,
+        "rate_per_unit": 41.3409,
+        "group": "1",
+        "calcdate": "06.10.2025"
+    }
+]
