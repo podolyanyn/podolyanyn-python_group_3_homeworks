@@ -1,0 +1,50 @@
+[
+    {
+        "exchangedate": "04.10.2025",
+        "r030": 826,
+        "cc": "GBP",
+        "txt": "Фунт стерлінгів",
+        "enname": "Pound Sterling",
+        "rate": 55.6199,
+        "units": 1,
+        "rate_per_unit": 55.6199,
+        "group": "1",
+        "calcdate": "02.10.2025"
+    },
+    {
+        "exchangedate": "05.10.2025",
+        "r030": 826,
+        "cc": "GBP",
+        "txt": "Фунт стерлінгів",
+        "enname": "Pound Sterling",
+        "rate": 55.6199,
+        "units": 1,
+        "rate_per_unit": 55.6199,
+        "group": "1",
+        "calcdate": "02.10.2025"
+    },
+    {
+        "exchangedate": "06.10.2025",
+        "r030": 826,
+        "cc": "GBP",
+        "txt": "Фунт стерлінгів",
+        "enname": "Pound Sterling",
+        "rate": 55.4442,
+        "units": 1,
+        "rate_per_unit": 55.4442,
+        "group": "1",
+        "calcdate": "03.10.2025"
+    },
+    {
+        "exchangedate": "07.10.2025",
+        "r030": 826,
+        "cc": "GBP",
+        "txt": "Фунт стерлінгів",
+        "enname": "Pound Sterling",
+        "rate": 55.5064,
+        "units": 1,
+        "rate_per_unit": 55.5064,
+        "group": "1",
+        "calcdate": "06.10.2025"
+    }
+]
