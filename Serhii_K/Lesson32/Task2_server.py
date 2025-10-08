@@ -42,7 +42,7 @@ if __name__ == '__main__':
                     key = int(data_string[:x])
                     text = data_string[(x + 1):]
                     # Використання шифру Цезаря
-                    new_string = Caesar_cipher(text, key)
+                    new_string = Caesar_cipher(key, text)
                     # Повернення зашифрованих даних назад:
                     connection.sendall(new_string.encode("utf-8"))
                     print(f"Server send back: {new_string}")
