@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    {% if notes_list %}
+    <ul>
+    {% for note in notes_list %}
+        <li><a href="/polls/{{ note.id }}/">{{ note.note_text }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No notes are available.</p>
+{% endif %}
+</body>
+</html>
