@@ -1,0 +1,72 @@
+body {
+  font-family: "Segoe UI", Roboto, sans-serif;
+  background: #f4f6f8;
+  margin: 0;
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h1 {
+  color: #333;
+  margin-bottom: 30px;
+  font-size: 2rem;
+  text-align: center;
+}
+
+.notes-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  width: 100%;
+  max-width: 1000px;
+}
+
+.note {
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 20px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.note:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+}
+
+.note-title {
+  font-weight: 600;
+  color: #1e293b;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.note-text {
+  color: #475569;
+  line-height: 1.5;
+  margin-bottom: 15px;
+}
+
+.note-meta {
+  font-size: 0.9rem;
+  color: #64748b;
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 10px;
+}
+
+.note-meta span {
+  display: inline-block;
+}
+
+@media (max-width: 600px) {
+  body {
+    padding: 20px 10px;
+  }
+  .note {
+    padding: 15px;
+  }
+}
