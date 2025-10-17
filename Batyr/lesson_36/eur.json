@@ -1,0 +1,50 @@
+[
+    {
+        "exchangedate": "04.10.2025",
+        "r030": 978,
+        "cc": "EUR",
+        "txt": "Євро",
+        "enname": "Euro",
+        "rate": 48.5039,
+        "units": 1,
+        "rate_per_unit": 48.5039,
+        "group": "1",
+        "calcdate": "02.10.2025"
+    },
+    {
+        "exchangedate": "05.10.2025",
+        "r030": 978,
+        "cc": "EUR",
+        "txt": "Євро",
+        "enname": "Euro",
+        "rate": 48.5039,
+        "units": 1,
+        "rate_per_unit": 48.5039,
+        "group": "1",
+        "calcdate": "02.10.2025"
+    },
+    {
+        "exchangedate": "06.10.2025",
+        "r030": 978,
+        "cc": "EUR",
+        "txt": "Євро",
+        "enname": "Euro",
+        "rate": 48.3818,
+        "units": 1,
+        "rate_per_unit": 48.3818,
+        "group": "1",
+        "calcdate": "03.10.2025"
+    },
+    {
+        "exchangedate": "07.10.2025",
+        "r030": 978,
+        "cc": "EUR",
+        "txt": "Євро",
+        "enname": "Euro",
+        "rate": 48.2696,
+        "units": 1,
+        "rate_per_unit": 48.2696,
+        "group": "1",
+        "calcdate": "06.10.2025"
+    }
+]
