@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ note.title }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 2em;
+            background-color: #f1f1f1;
+        }
+        .note-detail {
+            color: black;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 700px;
+            margin: 0 auto;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .note-meta {
+            color: gray;
+            font-size: 0.9em;
+        }
+        a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="note-detail">
+    <h1>{{ note.note_title }}</h1>
+
+    <p class="note-meta">
+        Нагадування: {{ note.note_reminder|date:"d.m.Y H:i" }}<br><br>
+        {# Створено: {{ note.note_created_at|date:"d.m.Y H:i" }}<br> #}
+        {# Оновлено: {{ note.note_updated_at|date:"d.m.Y H:i" }}<br> #}
+    </p>
+
+
+    <div class="note-content">
+        {{ note.note_text|linebreaks }}
+    </div>
+
+    <hr>
+
+    <p>
+        <a href="{% url 'notes:index' %}">⬅ Повернутися до списку нотаток</a>
+        |
+        {# <a href="{% url 'note_edit' note.note_id %}">✏️ Редагувати</a> #}
+        |
+        {# <a href="{% url 'note_delete' note.note_id %}">🗑️ Видалити</a> #}
+    </p>
+</div>
+
+</body>
+</html>
