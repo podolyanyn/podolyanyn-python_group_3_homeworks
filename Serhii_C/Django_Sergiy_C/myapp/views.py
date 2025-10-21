@@ -33,14 +33,15 @@
 # myapp/views.py
 
 from django.shortcuts import render, get_object_or_404
-from .models import Note 
+from .models import Note
+from .models import Category
 
 def note_list(request):
     notes = Note.objects.all().order_by('published_date')
     context = {'notes': notes}
-    return render(request, 'myapp/note_list.html', context)
+    return render(request, 'myapp/note/note_list.html', context)
 
 def note_detail(request, pk):
     note = get_object_or_404(Note, pk=pk)
     context = {'note': note}
-    return render(request, 'myapp/note_detail.html', context)
+    return render(request, 'myapp/note/note_detail.html', context)
