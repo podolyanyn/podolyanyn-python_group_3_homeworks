@@ -1,62 +1,32 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
     <title>{{ note.title }}</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 2em;
-            background-color: #f1f1f1;
-        }
-        .note-detail {
-            color: black;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            max-width: 700px;
-            margin: 0 auto;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        .note-meta {
-            color: gray;
-            font-size: 0.9em;
-        }
-        a {
-            color: #007BFF;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-    </style>
+    {# Тут підключаємо файл style.css #}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
-
-<div class="note-detail">
-    <h1>{{ note.note_title }}</h1>
-
-    <p class="note-meta">
-        Нагадування: {{ note.note_reminder|date:"d.m.Y H:i" }}<br><br>
-        {# Створено: {{ note.note_created_at|date:"d.m.Y H:i" }}<br> #}
-        {# Оновлено: {{ note.note_updated_at|date:"d.m.Y H:i" }}<br> #}
-    </p>
-
-
-    <div class="note-content">
-        {{ note.note_text|linebreaks }}
+    <div class="note-detail">
+        <h1>{{ note.note_title }}</h1>
+        <h4>Категорія: {{ note.note_category }}</h4>
+        <p class="note-meta">
+            Нагадування: {{ note.note_reminder|date:"d.m.Y H:i" }}<br><br>
+        </p>
+        <div class="note-content">
+            {{ note.note_text|linebreaks }}
+        </div>
+        <hr>
+        <p class="button-row">
+            <a href="{% url 'notes:index' %}">⬅ Повернутися до списку нотаток</a>
+            <a href="{% url 'notes:edit_note' note.id %}">✏️ Редагувати</a>
+            <form action="{% url 'notes:delete_note' note.id %}" method="post" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="link-button">🗑️ Видалити цю нотатку</button>
+            </form>
+        </p>
     </div>
-
-    <hr>
-
-    <p>
-        <a href="{% url 'notes:index' %}">⬅ Повернутися до списку нотаток</a>
-        |
-        {# <a href="{% url 'note_edit' note.note_id %}">✏️ Редагувати</a> #}
-        |
-        {# <a href="{% url 'note_delete' note.note_id %}">🗑️ Видалити</a> #}
-    </p>
-</div>
-
 </body>
 </html>

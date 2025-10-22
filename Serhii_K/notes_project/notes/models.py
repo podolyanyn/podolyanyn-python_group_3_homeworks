@@ -13,7 +13,6 @@ class Note(models.Model):
     note_text = models.TextField()
     note_reminder = models.DateTimeField("date reminder")
     note_created_at = models.DateTimeField(auto_now_add=True)
-    note_updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.note_title
