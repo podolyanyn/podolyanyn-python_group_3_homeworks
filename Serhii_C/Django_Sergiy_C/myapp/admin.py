@@ -4,7 +4,9 @@ from django.contrib import admin
 # myapp/admin.py (колишній polls/admin.py)
 
 from django.contrib import admin
-from .models import Note # Імпортуємо нову модель
+from .models import Note
+from .models import Category# Імпортуємо нову модель
 
 # Реєструємо Note, щоб вона з'явилася в адмін-панелі
 admin.site.register(Note)
+admin.site.register(Category)
