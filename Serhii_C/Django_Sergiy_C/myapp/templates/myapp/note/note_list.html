@@ -1,0 +1,32 @@
+{% load static %}
+{% load static %}<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Список Нотаток</title>
+    <link rel="stylesheet" href="{% static 'myapp/style.css' %}">
+    </head>
+<body>
+    <h1>Усі Мої Нотатки</h1>
+
+    {% if notes %}
+        <ul>
+            {% for note in notes %}
+                <li>
+                    <strong>
+                        <a href="{% url 'detail' note.pk %}">{{ note.title }}</a>
+                    </strong>
+                    <br>
+                    <small>Опубліковано: {{ note.published_date|date:"d M Y" }}</small>
+                    
+                    <p>{{ note.content|truncatechars:100 }}</p>
+                </li>
+                <hr>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Наразі жодних нотаток не знайдено. Створіть першу в адмін-панелі!</p>
+    {% endif %}
+
+</body>
+</html>
