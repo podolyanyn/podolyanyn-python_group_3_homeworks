@@ -1,0 +1,35 @@
+{% load static %}
+
+{#<link rel="stylesheet" href="{% static 'notes/css/style.css' %}">#}
+<link rel="stylesheet" href="{% static 'notes/css/bootstrap.css' %}">
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Список нотаток</title>
+
+</head>
+<body>
+    {% if notes_list %}
+        <ul>
+            {% for note in notes_list %}
+                <li><a href="{% url 'notes:note_detail' note.id %}">{{ note.note_title }}</a></li>
+                <small id="category">
+                    <span>Категорія: </span>
+                    <span style="color: dimgray; font-weight: bold;">{{ note.note_category.cat_title }}</span>
+                </small><br>
+                <small>Нотатка створена: {{ note.note_created_at }}</small><br>
+                <small>Нагадати: {{ note.note_reminder }}</small>
+                <br><br>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No notes are available.</p>
+    {% endif %}
+
+    <p>
+        <a href="{% url 'notes:add_note' %}" class="add-note-link">Створити нотатку</a>
+    </p>
+</body>
+</html>
