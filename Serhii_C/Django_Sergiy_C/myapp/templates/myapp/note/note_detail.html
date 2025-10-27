@@ -5,6 +5,9 @@
     <title>Note_Details</title>
 </head>
 <body>
+    {{ note.title }}, {{ note.text }}, {{ note.reminder }}, {{ note.category }}
+    <a href="{% url 'update' pk=note.pk %}">Редагувати</a>
+    <a href="{% url 'list' %}">Повернутися до списку</a>
 
 </body>
 </html>
