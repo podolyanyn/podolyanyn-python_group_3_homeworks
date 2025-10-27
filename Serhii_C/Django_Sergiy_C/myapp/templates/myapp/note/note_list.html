@@ -7,26 +7,56 @@
     <link rel="stylesheet" href="{% static 'myapp/style.css' %}">
     </head>
 <body>
-    <h1>Усі Мої Нотатки</h1>
+
+        <h1>Список Нотаток</h1>
+
+    <form method="GET" action="{% url 'list' %}" class="filter-form">
+        <label for="category-select">Фільтрувати за категорією:</label>
+        <select name="category" id="category-select">
+
+            <option value="">-- Усі категорії --</option>
+
+            {% for category in categories %}
+                <option value="{{ category.pk }}"
+                    {% if category.pk|stringformat:"s" == selected_category_id %}selected{% endif %}>
+                    {{ category.category_name }}
+                </option>
+            {% endfor %}
+        </select>
+        <button type="submit">Фільтрувати</button>
+
+        {% if selected_category_id %}
+            <a href="{% url 'list' %}">Скинути фільтр</a>
+        {% endif %}
+    </form>
+    <form method="GET" action="{% url 'list' %}" class="search-form">
+
+        <input type="text"
+               name="q"
+               placeholder="Введіть назву нотатки для пошуку..."
+               value="{{ search_query|default:'' }}">
+
+        <button type="submit">Шукати</button>
+
+        {% if search_query %}
+            <a href="{% url 'list' %}" style="margin-left: 10px;">Скинути пошук</a>
+
+        {% endif %}
+    </form>
+
+    <hr>
 
     {% if notes %}
         <ul>
             {% for note in notes %}
                 <li>
-                    <strong>
-                        <a href="{% url 'detail' note.pk %}">{{ note.title }}</a>
-                    </strong>
-                    <br>
-                    <small>Опубліковано: {{ note.published_date|date:"d M Y" }}</small>
-                    
-                    <p>{{ note.content|truncatechars:100 }}</p>
+                    <a href="{% url 'detail' note.pk %}">Назва:{{ note.title }}, Категорія: {{ note.category }}</a>
+
                 </li>
-                <hr>
             {% endfor %}
         </ul>
     {% else %}
-        <p>Наразі жодних нотаток не знайдено. Створіть першу в адмін-панелі!</p>
+        <p>Наразі жодних нотаток з такою назвою не знайдено. Для повернення у попереднє меню натисніть "Шукати"</p>
     {% endif %}
-
 </body>
 </html>
