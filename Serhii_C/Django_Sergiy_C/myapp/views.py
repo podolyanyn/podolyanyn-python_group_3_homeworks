@@ -8,6 +8,7 @@ from .forms import CategoryForm
 
 def note_list(request):
     notes = Note.objects.all().order_by('published_date')
+
     search_query = request.GET.get('q')
     if search_query:
         notes_found = Note.objects.filter(title__iexact=search_query)
