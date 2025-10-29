@@ -1,0 +1,67 @@
+{% extends "notes/base.html" %}
+
+{% block title %}Деталі нотатки{% endblock %}
+
+<!--Додавання посилання "Повернутись" на верхньому меню-->
+{% block new %}
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'notes:index' %}">Повернутись до списку нотаток</a>
+    </li>
+{% endblock %}
+
+
+<!-- Активація посилання "Редагувати" на верхньому меню-->
+{% block edit %}
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'notes:edit_note' note.id %}">Редагувати</a>
+    </li>
+{% endblock %}
+
+<!-- Активація посилання "Видалити" на верхньому меню і при натисканні відкриває модальне вікно підтвердження-->
+{% block delete %}
+<li class="nav-item">
+  <a class="nav-link text-warning" href="#" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
+    Видалити
+  </a>
+</li>
+{% endblock %}
+
+{% block content %}
+    <h6>Перегляд нотатки</h6>
+
+    <div class="note-detail">
+        <h2>{{ note.note_title|linebreaks }}</h2>
+
+        <p class="note-meta">
+            Категорія: {{ note.note_category}}<br>
+            Нагадування: {{ note.note_reminder|date:"d.m.Y H:i" }}
+        </p>
+
+        <div class="note-content" style="font-size: 2em;">
+            {{ note.note_text|linebreaks }}
+        </div>
+    </div>
+
+    <!-- Модальне вікно підтвердження видалення нотатки (ChatGPT)-->
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header bg-danger text-white">
+            <h5 class="modal-title" id="confirmDeleteLabel">Підтвердження видалення</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрити"></button>
+          </div>
+          <div class="modal-body">
+            Ти справді хочеш видалити цю нотатку?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Відміна</button>
+            <form id="delete-form" action="{% url 'notes:delete_note' note.id %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger">Так, видалити</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+{% endblock %}
