@@ -1,0 +1,80 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'notes/css/style.css' %}">
+<link rel="stylesheet" href="{% static 'notes/css/bootstrap.css' %}">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{% load crispy_forms_tags %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{% block title %}Список нотаток / INDEX{% endblock %}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body style="background-color: #e9ecef">
+    <!-- Відступ, щоб меню не перекривало контент -->
+    <div style="padding-top:30px;"></div>
+
+    <div class="container">
+        <!-- Верхнє меню -->
+        <nav class="navbar navbar-expand-sm bg-primary navbar-dark fixed-top">
+            <div class="container-fluid">
+                <ul class="navbar-nav">
+                    <!--Список нотаток-->
+                    {% block index %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'notes:index' %}">Нотатки</a>
+                    </li>
+                    {% endblock %}
+
+                    {% block new %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'notes:add_note' %}">Створити нотатку</a>
+                    </li>
+                    {% endblock %}
+
+                    <!-- Активується тільки коли необхідно-->
+                    {% block edit %}
+                        <li class="nav-item">
+                            <a class="nav-link disabled" href="#">Редагувати</a>
+                        </li>
+                    {% endblock %}
+
+                    <!-- Активується тільки коли необхідно-->
+                    {% block delete %}
+                        <li class="nav-item">
+                            <a class="nav-link disabled" href="#" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">Видалити</a>
+                        </li>
+                    {% endblock %}
+                </ul>
+
+                <!-- Праве меню (вхід/вихід користувача) -->
+                <ul class="navbar-nav ms-auto">
+                    {% block menu_user %}
+                        {% if user.is_authenticated %}
+                            <li class="nav-item">
+                                <form id="logout-form" method="post" action="{% url 'logout' %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="nav-link">Вихід  {{ user.get_username }}</button>
+                                </form>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'login' %}?next={{ request.path }}">Увійти</a>
+                            </li>
+                        {% endif %}
+                    {% endblock %}
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Основний блок сторінки -->
+        <div class="container-md bg-light p-3 my-5 rounded-5 border">
+            <div id="content">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
