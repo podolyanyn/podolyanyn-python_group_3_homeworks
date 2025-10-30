@@ -45,13 +45,15 @@
         {% endif %}
     </form>
 
+     <a href="{% url 'create' %}">Створити нову нотатку</a>
+
     <hr>
 
     {% if notes %}
         <ul>
             {% for note in notes %}
                 <li>
-                    <a href="{% url 'detail' note.pk %}">Назва:{{ note.title }}, Категорія: {{ note.category }}</a>
+                    <a href="{% url 'detail' note.pk %}">Назва:{{ note.title }}, Категорія: {{ note.category }}, Користувач:{{ note.user }}</a>
 
                 </li>
             {% endfor %}
