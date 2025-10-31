@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Створення нотатки</title>
+</head>
+<body>
+    <h1>Створення нової нотатки</h1>
+
+    <form action="{% url 'notes:add_note' %}" method="post">
+        {% csrf_token %}
+        {{ form }}
+
+        <input type="submit" value="Зберегти">
+    </form>
+</body>
+</html>
