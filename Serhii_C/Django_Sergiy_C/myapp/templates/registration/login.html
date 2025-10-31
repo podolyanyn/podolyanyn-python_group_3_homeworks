@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Вхід до системи (Без Crispy){% endblock %}
+
+{% block content %}
+
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h2 class="mb-4">Вхід до Системи</h2>
+
+            <form method="post">
+                {% csrf_token %}
+
+                {# Ітерація по всіх полях форми (Username та Password) #}
+                {% for field in form %}
+                    <div class="mb-3">
+                        {# Виводимо label (Назву поля) #}
+                        <label for="{{ field.id_for_label }}" class="form-label">
+                            {{ field.label }}
+                        </label>
+
+                        {# Виводимо саме поле, додаючи клас form-control #}
+                        {{ field.as_widget }} attrs={'class': 'form-control'} }}
+
+                        {# Вивід помилок поля #}
+                        {% if field.errors %}
+                            <div class="text-danger small">{{ field.errors }}</div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                <button type="submit" class="btn btn-primary mt-3">Увійти</button>
+            </form>
+        </div>
+    </div>
+{% endblock content %}
