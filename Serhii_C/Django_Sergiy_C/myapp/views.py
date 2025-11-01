@@ -9,8 +9,8 @@ from django.contrib.auth.decorators import login_required,permission_required
 
 @login_required
 def note_list(request):
-    notes = Note.objects.all().order_by('published_date')
-    # notes = Note.objects.filter(user=request.user).order_by('published_date')
+    # notes = Note.objects.all().order_by('published_date')
+    notes = Note.objects.filter(user=request.user).order_by('published_date')
 
     search_query = request.GET.get('q')
     if search_query:
