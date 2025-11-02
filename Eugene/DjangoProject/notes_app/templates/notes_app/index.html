@@ -4,16 +4,16 @@
 
 {% block body %}
 
-    {% for note in notes_list %}
+    {% for note in notes %}
         <div class="notes-container">
             <div class="note">
               <div class="note-title">{{ note.title }}</div>
               <div class="note-text">{{ note.text }}</div>
               <div class="note-meta">
                   {% if note.reminder %}
-                      <span>Нагадування: {{ note.reminder }}</span>
+                      <span>Нагадування: {{ note.reminder|date:"Y-m-d H:i" }}</span>
                   {% endif %}
-                      <span>Категорія: {{ note.category }}</span>
+                      <span>Категорія: {{ note.category.title }}</span>
               </div>
             </div>
         </div>
