@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d2db9de2-5ba1-45dc-bdab-b2abe9b9e09c" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="d2db9de2-5ba1-45dc-bdab-b2abe9b9e09c" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -40,7 +38,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "django.template.preview.state": "SHOW_EDITOR_AND_PREVIEW",
-    "git-widget-placeholder": "lesson__41",
+    "git-widget-placeholder": "lesson__42",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -92,7 +90,7 @@
       <updated>1762069155989</updated>
       <workItem from="1762069160528" duration="2114000" />
       <workItem from="1762071911321" duration="2132000" />
-      <workItem from="1762074098990" duration="15397000" />
+      <workItem from="1762074098990" duration="15734000" />
     </task>
     <servers />
   </component>
