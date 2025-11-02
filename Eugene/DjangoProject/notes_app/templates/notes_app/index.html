@@ -1,24 +1,22 @@
 {% extends 'notes_app/layout.html' %}
 
-{% block title %}Notes app{% endblock %}
+{% block title %}Нотатки{% endblock %}
 
 {% block body %}
-
+<div class="notes-container">
     {% for note in notes %}
-        <div class="notes-container">
-            <div class="note">
-              <div class="note-title">{{ note.title }}</div>
-              <div class="note-text">{{ note.text }}</div>
-              <div class="note-meta">
-                  {% if note.reminder %}
-                      <span>Нагадування: {{ note.reminder|date:"Y-m-d H:i" }}</span>
-                  {% endif %}
-                      <span>Категорія: {{ note.category.title }}</span>
-              </div>
-            </div>
+    <div class="note">
+        <h2 class="note-title"><a href="{% url 'note_detail' note.pk %}">{{ note.title }}</a></h2>
+        <p class="note-text">{{ note.text }}</p>
+        <div class="note-meta">
+            {% if note.reminder %}
+                <span>{{ note.reminder|date:"Y-m-d H:i" }}</span>
+            {% endif %}
+            <span>{{ note.category.title }}</span>
         </div>
+    </div>
     {% empty %}
-        <p>Немає нотаток.</p>
+    <p class="no-notes">Немає нотаток.</p>
     {% endfor %}
-
+</div>
 {% endblock %}

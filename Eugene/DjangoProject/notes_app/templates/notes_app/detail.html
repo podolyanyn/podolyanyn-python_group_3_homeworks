@@ -1,0 +1,22 @@
+{% extends 'notes_app/layout.html' %}
+
+{% block title %}{{ note.title }}{% endblock %}
+
+{% block body %}
+<div class="note-detail">
+    <h1>{{ note.title }}</h1>
+    <p class="note-text">{{ note.text }}</p>
+    <div class="note-meta">
+        {% if note.reminder %}
+            <span>{{ note.reminder|date:"Y-m-d H:i" }}</span>
+        {% endif %}
+        <span>{{ note.category.title }}</span>
+    </div>
+
+    <div class="detail-actions">
+        <a href="{% url 'note_update' note.pk %}" class="btn btn-primary">Редагувати</a>
+        <a href="{% url 'note_delete' note.pk %}" class="btn btn-danger">Видалити</a>
+        <a href="{% url 'index' %}" class="btn btn-secondary">Назад</a>
+    </div>
+</div>
+{% endblock %}

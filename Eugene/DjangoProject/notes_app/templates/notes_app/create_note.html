@@ -1,0 +1,17 @@
+{% extends 'notes_app/layout.html' %}
+
+{% block title %}Створення нотатки{% endblock %}
+
+{% block body %}
+<div class="form-container">
+    <h1 class="form-title">Створити нову нотатку</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Зберегти</button>
+            <a href="{% url 'index' %}" class="btn btn-secondary">Назад</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
