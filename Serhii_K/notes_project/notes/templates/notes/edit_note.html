@@ -1,0 +1,29 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Редагування: {{ note.note_title }}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="note-detail">
+        <h1>Редагування нотатки</h1>
+
+        <form method="post">
+            {% csrf_token %}
+            {{ form }}
+            <button type="submit">💾 Зберегти</button>
+        </form>
+        <br>
+        <form action="{% url 'notes:delete_note' note.id %}" method="post" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit">Видалити цю нотатку</button>
+        </form>
+        <p>
+            <a href="{% url 'notes:note_detail' note.id %}">⬅ Повернутися</a>
+        </p>
+    </div>
+</body>
+</html>
