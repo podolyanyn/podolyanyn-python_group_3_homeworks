@@ -4,7 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d2db9de2-5ba1-45dc-bdab-b2abe9b9e09c" name="Changes" comment="" />
+    <list default="true" id="d2db9de2-5ba1-45dc-bdab-b2abe9b9e09c" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notes_app/templates/notes_app/create_note.html" beforeDir="false" afterPath="$PROJECT_DIR$/notes_app/templates/notes_app/create_note.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notes_app/templates/notes_app/detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/notes_app/templates/notes_app/detail.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notes_app/templates/notes_app/layout.html" beforeDir="false" afterPath="$PROJECT_DIR$/notes_app/templates/notes_app/layout.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notes_app/templates/notes_app/update.html" beforeDir="false" afterPath="$PROJECT_DIR$/notes_app/templates/notes_app/update.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notes_project/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/notes_project/settings.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -38,7 +45,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "django.template.preview.state": "SHOW_EDITOR_AND_PREVIEW",
-    "git-widget-placeholder": "lesson__42",
+    "git-widget-placeholder": "lesson__43",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",

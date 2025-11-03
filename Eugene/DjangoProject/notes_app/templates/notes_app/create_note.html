@@ -1,17 +1,26 @@
 {% extends 'notes_app/layout.html' %}
+{% load crispy_forms_tags %}
 
 {% block title %}Створення нотатки{% endblock %}
 
 {% block body %}
-<div class="form-container">
-    <h1 class="form-title">Створити нову нотатку</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <div class="form-actions">
-            <button type="submit" class="btn btn-primary">Зберегти</button>
-            <a href="{% url 'index' %}" class="btn btn-secondary">Назад</a>
-        </div>
-    </form>
+<div class="card shadow-sm p-4 mx-auto" style="max-width: 600px;">
+  <h2 class="text-center text-primary mb-4">
+    <i class="bi bi-pencil-square"></i> Створити нову нотатку
+  </h2>
+
+  <form method="post">
+    {% csrf_token %}
+    {{ form|crispy }}
+
+    <div class="d-flex justify-content-center gap-2 mt-3">
+      <button type="submit" class="btn btn-primary">
+        <i class="bi bi-save"></i> Зберегти
+      </button>
+      <a href="{% url 'index' %}" class="btn btn-secondary">
+        <i class="bi bi-arrow-left"></i> Назад
+      </a>
+    </div>
+  </form>
 </div>
 {% endblock %}
