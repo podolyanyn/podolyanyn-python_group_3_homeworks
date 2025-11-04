@@ -5,7 +5,7 @@ import asyncio
 from asgiref.sync import sync_to_async
 # import google.generativeai as genai
 
-API_KEY = "AIzaSyAbkDiOPIMGPJmqEOgYZ4Y1g3YYRSRloSw"
+API_KEY = ""
 API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent"
 async def call_gemini_api(prompt: str):
     payload = {"contents": [{"parts": [{"text": prompt}]}]}
