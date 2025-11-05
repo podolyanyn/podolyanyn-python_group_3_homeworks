@@ -33,12 +33,12 @@ def prepering_data_for_ai(excursions: Iterable[Excursion]):
 
 async def excursions_list(user_query):
 
-    excursions_gotten_fromBD = await sync_to_async(list)(Excursion.objects.all())
+    # excursions_gotten_fromBD = await sync_to_async(list)(Excursion.objects.all())
     # excursions_gotten_fromBD = await sync_to_async(Excursion.objects.all)()
     # excursions_list = list(excursions_gotten_fromBD)
-    # excursions_gotten_fromBD = await sync_to_async(Excursion.objects.all, thread_sensitive=False)()
-    # excursions_list = await sync_to_async(list, thread_sensitive=False)(excursions_gotten_fromBD)
-    excursions_context = prepering_data_for_ai(excursions_gotten_fromBD)
+    excursions_gotten_fromBD = await sync_to_async(Excursion.objects.all, thread_sensitive=False)()
+    excursions_list = await sync_to_async(list, thread_sensitive=False)(excursions_gotten_fromBD)
+    excursions_context = prepering_data_for_ai(excursions_list)
 
     system_instruction = (
         "Ти є AI-асистент туристичної компанії. Твоє завдання — аналізувати надані "
