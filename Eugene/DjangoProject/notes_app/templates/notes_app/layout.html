@@ -1,0 +1,22 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'notes_app/css/style.css' %}">
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <a href="{% url 'index' %}" class="nav-link">Головна</a>
+            <a href="{% url 'create_note' %}" class="nav-link">Створити</a>
+            <a href="#" class="nav-link">Категорії</a>
+        </nav>
+    </header>
+
+    <main class="main">
+        {% block body %}{% endblock %}
+    </main>
+</body>
+</html>
