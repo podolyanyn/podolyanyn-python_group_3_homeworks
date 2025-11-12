@@ -1,47 +1,115 @@
-# # myapp/views.py
+from django.core.exceptions import ObjectDoesNotExist
+from django.shortcuts import render, get_object_or_404, redirect
 
-# from django.shortcuts import render
-# from django.http import HttpResponse
-
-# # def home_page(request):
-# #     return HttpResponse("Привіт, світ! Це мій перший Django-додаток.")
-
-# class Notes:
-#     def __init__(self,page_head):
-#         self.page_head = page_head
-
-# latest_notes_list = [Notes('Note 1'), Notes('Note 2'), Notes('Note 3')]
-
-# def index(request):
-#     # latest_question_list = Question.objects.order_by("-pub_date")[:5]
-#     output = ", ".join([q.page_head for q in latest_notes_list])
-#     return HttpResponse(output)
-
-# def note1(request, question_id):
-#     return HttpResponse("Page1 %s." % question_id)
-
-
-# def note2(request, question_id):
-#     response = "Page2  %s."
-#     return HttpResponse(response % question_id)
-
-
-# def note3(request, question_id):
-#     return HttpResponse("Page3  %s." % question_id)
-
-
-# myapp/views.py
-
-from django.shortcuts import render, get_object_or_404
+from .forms import NoteForm
 from .models import Note
 from .models import Category
+from .forms import CategoryForm
+from django.contrib.auth.decorators import login_required,permission_required
 
+@login_required
 def note_list(request):
-    notes = Note.objects.all().order_by('published_date')
-    context = {'notes': notes}
-    return render(request, 'myapp/note/note_list.html', context)
+    # notes = Note.objects.all().order_by('published_date')
+    notes = Note.objects.filter(user=request.user).order_by('published_date')
 
+    search_query = request.GET.get('q')
+    if search_query:
+        notes_found = Note.objects.filter(title__iexact=search_query)
+        if notes_found.exists() and notes_found.count() == 1:
+            note = notes_found.first()
+            return redirect('detail', pk=note.pk)
+        else:
+            context = {'note': notes}
+            return render(request, 'myapp/note/note_list.html', context)
+        # return redirect('list', q=search_query)
+
+
+    selected_category_pk = request.GET.get('category')
+    print(f"Отриманий ID категорії: {selected_category_pk}")
+    if selected_category_pk:
+        notes = notes.filter(category__pk=selected_category_pk)
+        print(f"Виконуємо фільтрацію: {notes.query}")
+    categories = Category.objects.all()
+
+    context = {
+        'notes': notes,
+        'categories': categories,
+        'selected_category': selected_category_pk,
+    }
+
+    return render(request, 'myapp/note/note_list.html', context)
+@login_required
 def note_detail(request, pk):
     note = get_object_or_404(Note, pk=pk)
-    context = {'note': note}
-    return render(request, 'myapp/note/note_detail.html', context)
+    if request.user == note.user:
+        context = {'note': note}
+        return render(request, 'myapp/note/note_detail.html', context)
+    else:
+
+        return redirect('list')
+
+
+
+@login_required
+@permission_required('is_staff')
+def note_create(request):
+    if request.method == 'POST':
+        form = NoteForm(request.POST)
+        if form.is_valid():
+            note = form.save(commit=False)
+
+            if request.user.is_authenticated:
+                note.user = request.user
+            else:
+                pass
+            note.save()
+            return redirect('list')
+
+    elif request.method == 'GET':
+        form = NoteForm()
+        return render(request, 'myapp/note/note_form.html', {'form': form})
+@login_required
+def note_update(request, pk):
+    note = get_object_or_404(Note, pk=pk)
+    if request.user == note.user:
+        if request.method == 'POST':
+            form = NoteForm(request.POST,instance=note)
+            if form.is_valid():
+                note = form.save(commit=False)
+                note.save()
+                return redirect('detail',pk=note.pk)
+        else:
+            form = NoteForm(instance=note)
+        return render(request, 'myapp/note/note_form.html', {'form': form, 'note': note})
+    else:
+
+        return redirect('list')
+@login_required
+def note_delete(request, pk):
+    note = get_object_or_404(Note, pk=pk)
+    if request.user == note.user:
+        if request.method == 'POST':
+            note.delete()
+            return redirect('list')
+        elif request.method == 'GET':
+            return render(request, 'myapp/note/note_delete.html', {'note': note})
+    else:
+
+        return redirect('list')
+
+@login_required
+def create_category(request):
+    if request.method == "POST":
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('list')
+    else:
+        form = CategoryForm()
+    return render(request, 'myapp/note/category_form.html', {'form': form})
+
+def search(request):
+    for notes in Note.objects.filter(user=request.user).order_by('published_date'):
+        if notes.title==request.GET.get('title'):
+            note_detail(request,notes.pk)
+            return render(request, 'myapp/note/note_detail.html', {'note': notes})

@@ -1,4 +1,6 @@
 {% load static %}
+{#<link rel="stylesheet" href="{% static 'notes/css/style.css' %}">#}
+<link rel="stylesheet" href="{% static 'notes/css/bootstrap.css' %}">
 
 <!DOCTYPE html>
 <html lang="en">
@@ -12,7 +14,10 @@
         <ul>
             {% for note in notes_list %}
                 <li><a href="{% url 'notes:note_detail' note.id %}">{{ note.note_title }}</a></li>
-                <small id="category">Категорія: {{ note.note_category.cat_title }}</small><br>
+                <small id="category">
+                    <span>Категорія: </span>
+                    <span style="color: dimgray; font-weight: bold;">{{ note.note_category.cat_title }}</span>
+                </small><br>
                 <small>Нотатка створена: {{ note.note_created_at }}</small><br>
                 <small>Нагадати: {{ note.note_reminder }}</small>
                 <br><br>

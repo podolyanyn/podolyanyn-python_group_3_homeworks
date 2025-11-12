@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Форма нотатки</title>
+</head>
+<body>
+    <h1>{% if note %}Редагувати нотатку{% else %}Створити нотатку{% endif %}</h1>
+
+    {% comment %} Форма для СТВОРЕННЯ/РЕДАГУВАННЯ {% endcomment %}
+    {% if note %}
+        <form method="POST" action="{% url 'update' pk=note.pk %}">
+    {% else %}
+        <form method="POST" action="{% url 'create' %}">
+    {% endif %}
+
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button type="submit">Зберегти</button>
+
+    </form>
+
+    <hr>
+
+
+    {% if note %}
+        <form method="POST" action="{% url 'delete' pk=note.pk %}" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit" onclick="return confirm('Ви впевнені, що хочете видалити нотатку?');">
+                Видалити
+            </button>
+        </form>
+    {% endif %}
+
+    <a href="{% url 'list' %}">Скасувати / Повернутися до списку</a>
+
+    <p>
+    <a href="{% url 'create_category' %}">+ Додати нову категорію</a>
+    </p>
+
+            <div class="d-flex justify-content-end mb-3">
+                <span class="navbar-text me-3">
+                    Користувач, {{ user.username }}!
+                </span>
+
+
+            </div>
+
+
+</body>
+</html>
