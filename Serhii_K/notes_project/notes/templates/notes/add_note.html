@@ -1,17 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Створення нотатки</title>
-</head>
-<body>
-    <h1>Створення нової нотатки</h1>
+{% extends "notes/base.html" %}
+{% load crispy_forms_tags %}
 
-    <form action="{% url 'notes:add_note' %}" method="post">
-        {% csrf_token %}
-        {{ form }}
+{% block title %}Створення нотатки{{ note.note_title }}{% endblock %}
 
-        <input type="submit" value="Зберегти">
-    </form>
-</body>
-</html>
+
+{% block new %}
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'notes:index' %}">Повернутись до списку нотаток</a>
+    </li>
+{% endblock %}
+
+{% block content %}
+    <h6>Створення нової нотатки</h6>
+
+    <div class="note-detail">
+        <form action="{% url 'notes:add_note' %}" method="post">
+            {% csrf_token %}
+            {{ form|crispy}}
+            <input type="submit" value="Зберегти">
+        </form>
+    </div>
+{% endblock %}
+

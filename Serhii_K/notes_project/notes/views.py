@@ -1,23 +1,33 @@
 # from django.http import HttpResponse
 # from django.template import loader
+from datetime import datetime, timedelta
+
+from django.db.models import F
 from django.utils import timezone
+
+from django.http import HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404, redirect
+from django.views import generic
+
+from .models import Note, Category
+from .forms import Add_note_form, Edit_note_form
 
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Note, Category
 from .forms import Add_note_form, Edit_note_form
 
+class IndexView(generic.ListView):
+    template_name = "notes/index.html"
+    context_object_name = "notes_list"
 
-def index(request):
-    notes_list = Note.objects.all().order_by('-note_created_at')
-    return render(request, 'notes/index.html', {'notes_list': notes_list})
+    def get_queryset(self):
+        return Note.objects.all().order_by('-note_created_at')
 
 
-
-def note_detail(request, note_id):
-    note = get_object_or_404(Note, pk=note_id)
-    return render(request, 'notes/note_detail.html', {'note': note})
-
+class DetailView(generic.DetailView):
+    model = Note
+    template_name = "notes/note_detail.html"
 
 def add_note(request):
     if request.method == "POST":
@@ -35,9 +45,7 @@ def add_note(request):
                 note_reminder=note_reminder,
             )
             new_note.save()
-
             return redirect("notes:index")
-
     else:
         form = Add_note_form()
 
@@ -46,17 +54,20 @@ def add_note(request):
 
 def edit_note(request, note_id):
     note = get_object_or_404(Note, pk=note_id)
-    print("NOTE:", note)
-    print("NOTE ID:", note.id)
+
     if request.method == "POST":
         form = Edit_note_form(request.POST)
         if form.is_valid():
+            # note.save(commit=False)   #Чередніченко
             note.note_title = form.cleaned_data["note_title"]
             note.note_text = form.cleaned_data["note_text"]
-            note.note_category = form.cleaned_data["note_category"]
             note.note_reminder = form.cleaned_data["note_reminder"]
+            category_name = form.cleaned_data["note_category"]
+            category, created = Category.objects.get_or_create(cat_title=category_name)
+            note.note_category = category
+
             note.save()
-            return redirect("notes:note_detail", note_id=note.id)
+            return redirect("notes:note_detail", pk=note.id)
     else:
         # Початкові дані для форми
         form = Edit_note_form(initial={
