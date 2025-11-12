@@ -1,22 +1,63 @@
 {% extends 'notes_app/layout.html' %}
-
-{% block title %}Нотатки{% endblock %}
+{% block title %}Мої нотатки{% endblock %}
 
 {% block body %}
-<div class="notes-container">
-    {% for note in notes %}
-    <div class="note">
-        <h2 class="note-title"><a href="{% url 'note_detail' note.pk %}">{{ note.title }}</a></h2>
-        <p class="note-text">{{ note.text }}</p>
-        <div class="note-meta">
-            {% if note.reminder %}
-                <span>{{ note.reminder|date:"Y-m-d H:i" }}</span>
-            {% endif %}
-            <span>{{ note.category.title }}</span>
+<div class="container">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-primary mb-0">
+      <i class="bi bi-journal-text"></i> Мої нотатки
+    </h2>
+    <a href="{% url 'create_note' %}" class="btn btn-primary">
+      <i class="bi bi-plus-circle"></i> Додати нотатку
+    </a>
+  </div>
+
+  {% if notes %}
+    <div class="row g-4">
+      {% for note in notes %}
+        <div class="col-12 col-sm-6 col-lg-4">
+          <div class="card h-100 shadow-sm border-0 rounded-4">
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title text-primary mb-2">
+                <i class="bi bi-pencil-square"></i> {{ note.title }}
+              </h5>
+              <p class="card-text flex-grow-1 text-muted">
+                {{ note.text|truncatewords:20 }}
+              </p>
+
+              {% if note.reminder %}
+                <p class="text-secondary small mb-2">
+                  <i class="bi bi-alarm"></i> {{ note.reminder|date:"Y-m-d H:i" }}
+                </p>
+              {% endif %}
+
+              {% if note.category %}
+                <p class="text-secondary small mb-3">
+                  <i class="bi bi-folder2"></i> {{ note.category.title }}
+                </p>
+              {% endif %}
+
+              <div class="mt-auto d-flex justify-content-between">
+                <a href="{% url 'note_detail' note.pk %}" class="btn btn-outline-primary btn-sm">
+                  <i class="bi bi-eye"></i> Переглянути
+                </a>
+                <a href="{% url 'note_update' note.pk %}" class="btn btn-outline-success btn-sm">
+                  <i class="bi bi-pencil"></i>
+                </a>
+                <a href="{% url 'note_delete' note.pk %}" class="btn btn-outline-danger btn-sm">
+                  <i class="bi bi-trash"></i>
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
+      {% endfor %}
     </div>
-    {% empty %}
-    <p class="no-notes">Немає нотаток.</p>
-    {% endfor %}
+  {% else %}
+    <div class="alert alert-info text-center mt-4">
+      <i class="bi bi-info-circle"></i> У вас ще немає нотаток.
+      <a href="{% url 'create_note' %}" class="alert-link">Створіть першу!</a>
+    </div>
+  {% endif %}
 </div>
 {% endblock %}
