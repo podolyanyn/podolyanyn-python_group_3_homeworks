@@ -1,0 +1,27 @@
+{% extends "notes/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Редагування нотатки{{ note.note_title }}{% endblock %}
+
+{% block new %}
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'notes:detail_note' note.id %}">Назад до нотатки</a>
+    </li>
+{% endblock %}
+
+{% block delete %}
+{% endblock %}
+
+{% block content %}
+    <h6>Редагування нотатки</h6>
+
+    <div class="note-detail">
+        <form method="post">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <button type="submit">💾 Зберегти</button>
+        </form>
+    </div>
+
+{% endblock %}
+

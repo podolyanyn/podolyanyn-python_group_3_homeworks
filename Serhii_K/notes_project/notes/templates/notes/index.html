@@ -1,18 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "notes/base.html" %}
+
+{% block title %}Список нотаток / INDEX{% endblock %}
+
+<!-- Основний блок сторінки (список нотаток) -->
+{% block content %}
     {% if notes_list %}
-    <ul>
-    {% for note in notes_list %}
-        <li><a href="/polls/{{ note.id }}/">{{ note.note_text }}</a></li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No notes are available.</p>
-{% endif %}
-</body>
-</html>
+        <ul>
+            {% for note in notes_list %}
+                <li><a href="{% url 'notes:detail_note' note.id %}" class="fs-4">{{ note.note_title }}</a></li>
+                <small id="category">
+                    <span>Категорія: </span>
+                    <span style="color: dimgray; font-weight: bold;">{{ note.note_category.cat_title }}</span>
+                </small><br>
+                <small id="category">
+                    <span>Автор: </span>
+                    <span style="color: dimgray; font-weight: bold;">{{ note.author }}</span>
+                </small><br>
+                <small style="color: gray;">Нотатка створена: {{ note.note_created_at }}</small><br>
+                <small style="color: gray;">Нагадати: {{ note.note_reminder }}</small>
+                <br><br>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No notes are available.</p>
+    {% endif %}
+
+{% endblock %}
+

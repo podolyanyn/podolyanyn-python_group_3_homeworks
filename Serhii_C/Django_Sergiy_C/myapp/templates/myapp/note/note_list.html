@@ -7,26 +7,92 @@
     <link rel="stylesheet" href="{% static 'myapp/style.css' %}">
     </head>
 <body>
-    <h1>Усі Мої Нотатки</h1>
+
+        <h1>Список Нотаток</h1>
+
+    <form method="GET" action="{% url 'list' %}" class="filter-form">
+        <label for="category-select">Фільтрувати за категорією:</label>
+        <select name="category" id="category-select">
+
+            <option value="">-- Усі категорії --</option>
+
+            {% for category in categories %}
+                <option value="{{ category.pk }}"
+                    {% if category.pk|stringformat:"s" == selected_category_id %}selected{% endif %}>
+                    {{ category.category_name }}
+                </option>
+            {% endfor %}
+        </select>
+        <button type="submit">Фільтрувати</button>
+
+        {% if selected_category_id %}
+            <a href="{% url 'list' %}">Скинути фільтр</a>
+        {% endif %}
+    </form>
+    <form method="GET" action="{% url 'list' %}" class="search-form">
+        <label for="search-form">Шукати нотатку:</label>
+
+        <input type="text"
+               name="q"
+               placeholder="Введіть назву нотатки для пошуку..."
+               value="{{ search_query|default:'' }}">
+
+        <button type="submit">Шукати</button>
+
+        {% if search_query %}
+            <a href="{% url 'list' %}" style="margin-left: 10px;">Скинути пошук</a>
+
+        {% endif %}
+    </form>
+
+     <a href="{% url 'create' %}">Створити нову нотатку</a>
+
+    <hr>
 
     {% if notes %}
         <ul>
             {% for note in notes %}
                 <li>
-                    <strong>
-                        <a href="{% url 'detail' note.pk %}">{{ note.title }}</a>
-                    </strong>
-                    <br>
-                    <small>Опубліковано: {{ note.published_date|date:"d M Y" }}</small>
-                    
-                    <p>{{ note.content|truncatechars:100 }}</p>
+                    <a href="{% url 'detail' note.pk %}">Назва:{{ note.title }}, Категорія: {{ note.category }}, Користувач:{{ note.user }}</a>
+
                 </li>
-                <hr>
             {% endfor %}
         </ul>
     {% else %}
-        <p>Наразі жодних нотаток не знайдено. Створіть першу в адмін-панелі!</p>
+        <p>Наразі жодних нотаток з такою назвою не знайдено. Для повернення у попереднє меню натисніть "Шукати"</p>
+    {% endif %}
+    {# base.html (фрагмент в блоці <body> або container) #}
+
+<div class="container mt-4">
+
+    {# Перевіряємо, чи користувач автентифікований #}
+    {% if user.is_authenticated %}
+
+        <div class="d-flex justify-content-end mb-3">
+            <span class="navbar-text me-3">
+                Користувач, {{ user.username }}!
+            </span>
+
+            {# Посилання на функцію виходу. Використовуємо назву маршруту 'logout' #}
+            <a href="{% url 'login' %}" class="btn btn-outline-danger">
+                Вийти
+            </a>
+        </div>
+
+    {% else %}
+
+        {# Якщо користувач не увійшов, показуємо посилання на вхід #}
+        <div class="d-flex justify-content-end mb-3">
+            <a href="{% url 'login' %}" class="btn btn-success">
+                Увійти
+            </a>
+        </div>
+
     {% endif %}
 
+    {% block content %}
+    {# Тут буде вміст сторінки #}
+    {% endblock %}
+</div>
 </body>
 </html>

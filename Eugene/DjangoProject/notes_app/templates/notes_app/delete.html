@@ -1,0 +1,18 @@
+{% extends 'notes_app/layout.html' %}
+
+{% block title %}Видалити нотатку {{ note.title }}{% endblock %}
+
+{% block body %}
+<div class="delete-container">
+    <h1>Видалити нотатку?</h1>
+    <p><strong>{{ note.title }}</strong></p>
+    <p>{{ note.text }}</p>
+    <p>Категорія: {{ note.category.title }}</p>
+    
+    <form method="post" style="display: inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Видалити</button>
+    </form>
+    <a href="{% url 'note_detail' note.pk %}" class="btn btn-secondary">Назад</a>
+</div>
+{% endblock %}
