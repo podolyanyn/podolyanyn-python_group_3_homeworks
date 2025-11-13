@@ -1,29 +1,47 @@
 {% extends 'notes_app/layout.html' %}
-
 {% block title %}{{ note.title }}{% endblock %}
 
 {% block body %}
-<div class="card shadow-sm p-4 mx-auto" style="max-width: 700px;">
-  <h2 class="text-center text-primary mb-3">{{ note.title }}</h2>
-  <p class="mb-3">{{ note.text }}</p>
+<div class="container" style="max-width: 700px;">
+  <div class="card shadow-sm border-0 rounded-4">
+    <div class="card-body p-4">
 
-  <p class="text-muted">
-    {% if note.reminder %}
-      <i class="bi bi-alarm"></i> {{ note.reminder|date:"Y-m-d H:i" }} <br>
-    {% endif %}
-    <i class="bi bi-folder2"></i> {{ note.category.title }}
-  </p>
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="text-primary mb-0">
+          <i class="bi bi-journal-text"></i> {{ note.title }}
+        </h3>
+        <div>
+          <a href="{% url 'note_update' note.pk %}" class="btn btn-outline-success btn-sm me-2">
+            <i class="bi bi-pencil"></i> Редагувати
+          </a>
+          <a href="{% url 'note_delete' note.pk %}" class="btn btn-outline-danger btn-sm">
+            <i class="bi bi-trash"></i> Видалити
+          </a>
+        </div>
+      </div>
 
-  <div class="d-flex justify-content-center gap-2 mt-3">
-    <a href="{% url 'note_update' note.pk %}" class="btn btn-primary">
-      <i class="bi bi-pencil"></i> Редагувати
-    </a>
-    <a href="{% url 'note_delete' note.pk %}" class="btn btn-danger">
-      <i class="bi bi-trash"></i> Видалити
-    </a>
-    <a href="{% url 'index' %}" class="btn btn-secondary">
-      <i class="bi bi-arrow-left"></i> Назад
-    </a>
+      {% if note.category %}
+        <p class="text-secondary small mb-2">
+          <i class="bi bi-folder2"></i> {{ note.category.title }}
+        </p>
+      {% endif %}
+
+      {% if note.reminder %}
+        <p class="text-secondary small mb-3">
+          <i class="bi bi-alarm"></i> {{ note.reminder|date:"Y-m-d H:i" }}
+        </p>
+      {% endif %}
+
+      <p class="card-text fs-5 mb-4">{{ note.text|linebreaksbr }}</p>
+
+      <div class="d-flex justify-content-between text-muted small">
+        <span><i class="bi bi-calendar3"></i> Створено: {{ note.created_at|date:"Y-m-d H:i" }}</span>
+        {% if note.user %}
+          <span><i class="bi bi-person"></i> Автор: {{ note.user.username }}</span>
+        {% endif %}
+      </div>
+
+    </div>
   </div>
 </div>
 {% endblock %}
