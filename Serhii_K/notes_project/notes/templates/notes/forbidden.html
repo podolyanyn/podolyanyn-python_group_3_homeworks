@@ -1,0 +1,9 @@
+{% extends "notes/base.html" %}
+
+{% block title %}Доступ заборонено (403){{ note.note_title }}{% endblock %}
+
+{% block content %}
+    <h3 style="color: orange; font-weight: bold;">Ця дія заборонена!</h3>
+    <p>{{ message|default:"Ви не маєте необхідних прав для цієї сторінки." }}</p>
+    <p>Будь ласка, перевірте свої облікові дані або поверніться на <a href="{% url 'notes:index' %}">головну сторінку</a>.</p>
+{% endblock %}

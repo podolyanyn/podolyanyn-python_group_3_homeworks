@@ -7,6 +7,7 @@ class NoteInline(admin.TabularInline):
     fields = ["note_title"]
     extra = 0
 
+
 class CategoryAdmin(admin.ModelAdmin):
     fieldsets = [
         ("Категорія", {"fields": ["cat_title"]}),
@@ -23,4 +24,3 @@ class NoteAdmin(admin.ModelAdmin):
 
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Note, NoteAdmin)
-

@@ -7,7 +7,7 @@
     {% if notes_list %}
         <ul>
             {% for note in notes_list %}
-                <li><a href="{% url 'notes:note_detail' note.id %}" class="fs-4">{{ note.note_title }}</a></li>
+                <li><a href="{% url 'notes:detail_note' note.id %}" class="fs-4">{{ note.note_title }}</a></li>
                 <small id="category">
                     <span>Категорія: </span>
                     <span style="color: dimgray; font-weight: bold;">{{ note.note_category.cat_title }}</span>
@@ -24,5 +24,6 @@
     {% else %}
         <p>No notes are available.</p>
     {% endif %}
+
 {% endblock %}
 

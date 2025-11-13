@@ -5,8 +5,11 @@
 
 {% block new %}
     <li class="nav-item">
-       <a class="nav-link" href="{% url 'notes:note_detail' note.id %}">Назад до нотатки</a>
+        <a class="nav-link" href="{% url 'notes:detail_note' note.id %}">Назад до нотатки</a>
     </li>
+{% endblock %}
+
+{% block delete %}
 {% endblock %}
 
 {% block content %}
@@ -19,5 +22,6 @@
             <button type="submit">💾 Зберегти</button>
         </form>
     </div>
+
 {% endblock %}
 
