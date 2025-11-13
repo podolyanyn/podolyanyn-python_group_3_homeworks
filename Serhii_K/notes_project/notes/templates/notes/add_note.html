@@ -2,8 +2,6 @@
 {% load crispy_forms_tags %}
 
 {% block title %}Створення нотатки{{ note.note_title }}{% endblock %}
-
-
 {% block new %}
     <li class="nav-item">
         <a class="nav-link" href="{% url 'notes:index' %}">Назад до нотаток</a>
