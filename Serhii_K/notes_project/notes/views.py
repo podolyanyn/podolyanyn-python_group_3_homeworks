@@ -1,21 +1,11 @@
-# from django.http import HttpResponse
-# from django.template import loader
-from datetime import datetime, timedelta
-
-from django.db.models import F
-from django.utils import timezone
-
-from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import generic
 
 from .models import Note, Category
 from .forms import Add_note_form, Edit_note_form
 
-from django.http import HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404, redirect
-from .models import Note, Category
-from .forms import Add_note_form, Edit_note_form
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.decorators import login_required, permission_required
 
 class IndexView(generic.ListView):
     template_name = "notes/index.html"
@@ -25,10 +15,18 @@ class IndexView(generic.ListView):
         return Note.objects.all().order_by('-note_created_at')
 
 
-class DetailView(generic.DetailView):
+# Дозвіл на перегляд нотатки тільки автору після входу. UserPassesTestMixin дозволяє робити перевірку (ChatGPT)
+class DetailView(LoginRequiredMixin, UserPassesTestMixin, generic.DetailView):
     model = Note
     template_name = "notes/note_detail.html"
+    # Функція перевіряє що користувач є автором нотатки
+    def test_func(self):
+        note = self.get_object()
+        return note.author == self.request.user
 
+
+@login_required
+@permission_required("notes.add_note")
 def add_note(request):
     if request.method == "POST":
         form = Add_note_form(request.POST)
@@ -37,12 +35,14 @@ def add_note(request):
             note_title = form.cleaned_data["note_title"]
             note_text = form.cleaned_data["note_text"]
             note_reminder = form.cleaned_data["note_reminder"]
+            author=request.user     # додаємо поле author - це поточний користувач
             category, created = Category.objects.get_or_create(cat_title=category_name)
             new_note = Note(
                 note_category=category,
                 note_title=note_title,
                 note_text=note_text,
                 note_reminder=note_reminder,
+                author=author,
             )
             new_note.save()
             return redirect("notes:index")
@@ -51,9 +51,14 @@ def add_note(request):
 
     return render(request, "notes/add_note.html", {"form": form})
 
-
+@login_required
+@permission_required("notes.change_note")
 def edit_note(request, note_id):
     note = get_object_or_404(Note, pk=note_id)
+
+    # Якщо користувач не є автором нотатки - відправляємо його на сторінку Помилка 403 (ChatGPT)
+    if note.author != request.user:
+        return render(request, "notes/forbidden.html", status=403)
 
     if request.method == "POST":
         form = Edit_note_form(request.POST)
@@ -79,12 +84,17 @@ def edit_note(request, note_id):
 
     return render(request, "notes/edit_note.html", {"form": form, "note": note})
 
+@login_required
+@permission_required("notes.delete_note")
 def delete_note(request, note_id):
     note = get_object_or_404(Note, pk=note_id)
+
+    # Якщо користувач не є автором нотатки - відправляємо його на сторінку Помилка 403 (ChatGPT)
+    if note.author != request.user:
+        return render(request, "notes/forbidden.html", status=403)
 
     if request.method == "POST":
         note.delete()
         return redirect("notes:index")
 
     return redirect("notes:index")
-

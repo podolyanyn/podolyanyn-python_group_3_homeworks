@@ -28,12 +28,10 @@
                     </li>
                     {% endblock %}
 
-                    <!--Підставляємо коли необхідно-->
-                    {% block menu_actions %}{% endblock %}
-
                     {% block new %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'notes:add_note' %}">Створити нову нотатку</a>
+                        <a class="nav-link" href="{% url 'notes:add_note' %}">Створити нотатку</a>
+
                     </li>
                     {% endblock %}
 
@@ -49,6 +47,25 @@
                         <li class="nav-item">
                             <a class="nav-link disabled" href="#" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">Видалити</a>
                         </li>
+                    {% endblock %}
+                </ul>
+
+
+                <!-- Праве меню (вхід/вихід користувача) -->
+                <ul class="navbar-nav ms-auto">
+                    {% block menu_user %}
+                        {% if user.is_authenticated %}
+                            <li class="nav-item">
+                                <form id="logout-form" method="post" action="{% url 'logout' %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="nav-link">Вихід  {{ user.get_username }}</button>
+                                </form>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'login' %}?next={{ request.path }}">Увійти</a>
+                            </li>
+                        {% endif %}
                     {% endblock %}
                 </ul>
             </div>
